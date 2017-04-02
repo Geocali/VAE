@@ -45,22 +45,6 @@ class electrical_circuit:
             n = n + 1
             i,j = self.increment_ij_circuit(i, j)
 
-        import matplotlib.pyplot as plt
+        self.circuits = pd.DataFrame(data=tab_circuits, columns=['circuit', 'n', 'k', 'i', 'j', 'fabricant', 'rayon', 'x', 'y'])
 
-        circuits = pd.DataFrame(data=tab_circuits, columns=['circuit', 'n', 'k', 'i', 'j', 'fabricant', 'rayon', 'x', 'y'])
-
-        # tableau (x, y) avec le circuit "0":
-        fig, axes = plt.subplots(nrows=1, ncols=1)
-        xlim_ = (circuits['x'].min(axis=0) - 10, circuits['x'].max(axis=0) + 10)
-        ylim_ = (circuits['y'].min(axis=0) - 10, circuits['y'].max(axis=0) + 10)
-        for n_circuit in range(0, circuits['circuit'].max(axis=0)):
-            tab = circuits.loc[circuits['circuit'] == n_circuit][['x', 'y']]
-            tab.plot(x='x', y='y', ax=axes, xlim=xlim_, ylim=ylim_, label=n_circuit)
-
-        #centres.plot.scatter(x='x', y='y', ax=axes)#, s=np.ones(nb_centres))
-        plt.show()
-        #circuits.plot()
-        #plt.plot(circuits['i'], circuits['j'])
-        # for kk in range(0, n):
-        #     plt.plot(circuits['n', 'x', 'y'].loc[]
-        # plt.show()
+        return self.circuits
