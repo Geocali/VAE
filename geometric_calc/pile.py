@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # -*- coding: utf-8 -*-
 
 import math
@@ -384,4 +383,4 @@ class TestMethods(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
->>>>>>> 342872beb6a087e778d3166980c280bee753475c
+#>>>>>>> 342872beb6a087e778d3166980c280bee753475c
