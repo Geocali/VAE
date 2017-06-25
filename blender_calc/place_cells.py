@@ -19,7 +19,7 @@ def get_distance():
     print(distance)  # print distance to console, DEBUG
     return distance
 
-def create_cell(x, y, z, i = 1):
+def create_cell(x, y, z, i):
     # select the model of the cell
     bpy.ops.object.select_by_type(type='EMPTY')
     object = bpy.data.objects['18650 Battery.000']
@@ -42,44 +42,63 @@ TRANSFORM_OT_translate={"value":(0, 0, 0), "constraint_axis":(False, False, Fals
     bpy.ops.object.origin_set(type='ORIGIN_CENTER_OF_MASS')
     bpy.ops.rigidbody.objects_add(type='ACTIVE')
 
+def create_walls(l_left, l_right, l_top):
 
-width = 4
+    # we calculate the angles with the Al Kashi theorem
+    a_lr = acos((l_left**2 + l_right**2 - l_top**2) / (2 * l_left * l_right))
 
-# we create the left wall
-l_left = 10
-left_wall = bpy.ops.mesh.primitive_plane_add(view_align=False, enter_editmode=False, location=(0, 0, 0), rotation=(0, 0, 0), layers=(True, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False))
-# set the behaviour for the animation
-bpy.ops.rigidbody.objects_add(type='PASSIVE')
-# set the cursor location (= origin of the object)
-bpy.context.scene.cursor_location = (1.0, 1.0, 0.0)
-bpy.ops.object.origin_set(type='ORIGIN_CURSOR')
-# place the object
-bpy.context.object.location[0] = 0
-bpy.context.object.rotation_euler[1] = 0.7
-bpy.context.object.scale[0] = l_left
-bpy.context.object.scale[1] = width
+    # we create the left wall
+    left_wall = bpy.ops.mesh.primitive_plane_add(view_align=False, enter_editmode=False, location=(0, 0, 0), rotation=(0, 0, 0), layers=(True, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False))
+    # set the behaviour for the animation
+    bpy.ops.rigidbody.objects_add(type='PASSIVE')
+    # set the cursor location (= origin of the object)
+    bpy.context.scene.cursor_location = (1.0, 1.0, 0.0)
+    bpy.ops.object.origin_set(type='ORIGIN_CURSOR')
+    # place the object
+    bpy.context.object.location[0] = 0
+    bpy.context.object.rotation_euler[1] = math.pi / 2 - a_lr / 2
+    bpy.context.object.scale[0] = l_left
+    bpy.context.object.scale[1] = 4
 
-# we create the right wall
-l_right = 15
-right_wall = bpy.ops.mesh.primitive_plane_add(view_align=False, enter_editmode=False, location=(0, 0, 0), rotation=(0, 0, 0), layers=(True, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False))
-bpy.ops.rigidbody.objects_add(type='PASSIVE')
-bpy.context.scene.cursor_location = (1.0, 1.0, 0.0)
-bpy.ops.object.origin_set(type='ORIGIN_CURSOR')
-bpy.context.object.location[0] = 0
-bpy.context.object.rotation_euler[1] = math.pi - 0.8
-bpy.context.object.scale[0] = l_right
-bpy.context.object.scale[1] = width
+    # we create the right wall
+    right_wall = bpy.ops.mesh.primitive_plane_add(view_align=False, enter_editmode=False, location=(0, 0, 0), rotation=(0, 0, 0), layers=(True, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False))
+    bpy.ops.rigidbody.objects_add(type='PASSIVE')
+    bpy.context.scene.cursor_location = (1.0, 1.0, 0.0)
+    bpy.ops.object.origin_set(type='ORIGIN_CURSOR')
+    bpy.context.object.location[0] = 0
+    bpy.context.object.rotation_euler[1] = math.pi / 2 + a_lr / 2
+    bpy.context.object.scale[0] = l_right
+    bpy.context.object.scale[1] = 4
 
+    return True
+
+# ===== parameters =========
+nb_piles = 10
+l_left = 15
+l_right = 10
+l_top = 20
+
+# we create the walls
+create_walls(l_left, l_right, l_top)
+
+dx = 1.5
+dz = 1.5
 # we create the cells
 # first one in the bottom
 create_cell(0, 0, 2, 1)
 # the 2 of the second row
-create_cell(-1.5, 0, 3, 2)
-create_cell(1.5, 0, 3, 3)
+create_cell(-dx, 0, 2 + dz, 2)
+create_cell(dx, 0, 2 + dz, 3)
 # the 3 of the third row
-create_cell(-2.5, 0, 4.5, 4)
-create_cell(0, 0, 4.5, 5)
-create_cell(2.5, 0, 4.5, 6)
+create_cell(- 2 * dx, 0, 2 + 2 * dz, 4)
+create_cell(0, 0, 2 + 2 * dz, 5)
+create_cell(2 * dx, 0, 2 + 2 * dz, 6)
+
+# k = 1 # indice of the cell
+# l = 1 # indice of the line
+# c = 1 # indice of the column
+# while k <= nb_cells:
+#     x =
 
 # we play the animation
 i = 0
